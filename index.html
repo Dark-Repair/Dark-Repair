@@ -585,20 +585,12 @@ var DB = {
 };
 if (_ls) { try { var _d=JSON.parse(localStorage.getItem('dr')||'{}'); for(var _k in _d) repDB[_k]=_d[_k]; } catch(e){} }
 if (!DB.get('DR-4721')) DB.save('DR-4721',{model:'iPhone 13 Pro Max',repairs:['Remplacement ecran','Remplacement batterie'],status:1,time:'09:30',created:'Demo'});
-var _ok = false;
-function _go() {
-  if (_ok) return;
-  _ok = true;
+window.onload = function() {
   setTimeout(function() {
-    var s = document.getElementById('sp');
-    var h = document.getElementById('home');
-    if (s) s.classList.remove('on');
-    if (h) h.classList.add('on');
+    document.getElementById('sp').classList.remove('on');
+    document.getElementById('home').classList.add('on');
   }, 3000);
-}
-document.addEventListener('DOMContentLoaded', _go);
-window.onload = _go;
-setTimeout(_go, 1000);
+};
 
 var HUD_LBL = {home:'ACCUEIL',repairs:'REPARATIONS',booking:'RENDEZ-VOUS',tracking:'SUIVI',contact:'CONTACT'};
 var PAGES = ['home','repairs','booking','tracking','contact'];
@@ -827,11 +819,16 @@ function adminStatus(c,s){
   if(s===1||s===3){
     var r=DB.get(c),app=r?r.model:'appareil';
     var msg=s===3?'Bonjour, '+app+' est REPARE et pret. Code:'+c+' - Dark Repair':'Bonjour, '+app+' est EN COURS. Code:'+c+' - Dark Repair';
-    var d=document.createElement('div');
-    d.style.cssText='position:fixed;inset:0;z-index:600;background:rgba(2,8,16,0.95);display:flex;align-items:center;justify-content:center;padding:24px;';
-    d.innerHTML='<div style="background:#060F1E;border:1px solid rgba(0,229,255,0.4);padding:24px;width:100%;max-width:300px;text-align:center;"><div style="font-family:var(--T);font-size:8px;color:#00E5FF;letter-spacing:2px;margin-bottom:16px;">NOTIFIER LE CLIENT</div><button onclick="window.open('https://wa.me/?text='+encodeURIComponent(''+msg.replace(/\/g,'\\').replace(/'/g,"\'")+''));this.closest('div[style]').remove();" style="width:100%;background:linear-gradient(135deg,#0088FF,#00E5FF);border:none;color:#000;font-family:var(--T);font-size:8px;font-weight:700;padding:12px;cursor:pointer;margin-bottom:8px;letter-spacing:1px;">ENVOYER WHATSAPP</button><button onclick="this.closest('div[style]').remove();" style="width:100%;background:none;border:1px solid rgba(0,229,255,0.2);color:rgba(0,229,255,0.6);font-family:var(--M);font-size:7px;padding:9px;cursor:pointer;">PAS MAINTENANT</button></div>';
-    document.body.appendChild(d);
+    var wa='https://wa.me/?text='+encodeURIComponent(msg);
+    if(window.confirm('Envoyer WhatsApp au client ?')){
+      window.open(wa,'_blank');
+    }
   }
+}
+
+function closePopup() {
+  var p = document.getElementById('wa-popup');
+  if (p && p.parentNode) p.parentNode.removeChild(p);
 }
 </script>
 </body>
